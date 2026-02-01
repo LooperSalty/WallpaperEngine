@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=WallpaperEngine
+Comment=Browse and apply Wallpaper Engine wallpapers
+Exec=python3 /home/paul/wallpaper-selector.py
+Type=Application
+Categories=Utility;Graphics;
+Icon=preferences-desktop-wallpaper
+Keywords=wallpaper;engine;background;
