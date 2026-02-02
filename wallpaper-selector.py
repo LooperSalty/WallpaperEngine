@@ -14,7 +14,24 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango
 
 WORKSHOP_DIR = Path.home() / ".local/share/Steam/steamapps/workshop/content/431960"
+STATE_FILE = Path.home() / ".config/wallpaper-engine/state.json"
 WE_BIN = "linux-wallpaperengine"
+
+
+def save_state(workshop_id: str, screens: list[str], fps: int, silent: bool):
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    data = {
+        "workshop_id": workshop_id,
+        "screens": screens,
+        "fps": fps,
+        "silent": silent,
+    }
+    STATE_FILE.write_text(json.dumps(data))
+
+
+def clear_state():
+    if STATE_FILE.exists():
+        STATE_FILE.unlink()
 
 
 # ---------------------------------------------------------------------------
@@ -277,10 +294,12 @@ class WallpaperSelectorWindow(Adw.ApplicationWindow):
                 self.status_label.set_text(f"{WE_BIN} not found")
                 return
 
+        save_state(info.workshop_id, screens, fps, self.chk_silent.get_active())
         self._update_status()
 
     def _on_stop(self, _btn):
         self._kill_all()
+        clear_state()
         self._update_status()
 
 
